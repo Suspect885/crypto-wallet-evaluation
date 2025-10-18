@@ -1,9 +1,16 @@
+import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Shield, Lock, Cpu, Network, Zap, CheckCircle2, AlertTriangle, TrendingUp } from "lucide-react";
+import { Link } from "wouter";
+import { getLoginUrl } from "@/const";
 
 export default function Home() {
+  // The userAuth hooks provides authentication state
+  // To implement login/logout functionality, simply call logout() or redirect to getLoginUrl()
+  let { user, loading, error, isAuthenticated, logout } = useAuth();
+
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
@@ -13,9 +20,28 @@ export default function Home() {
             <Shield className="w-8 h-8 text-primary" />
             <h1 className="text-2xl font-bold">تقييم المحفظة الرقمية</h1>
           </div>
-          <Badge variant="outline" className="text-sm">
-            تقرير فني شامل
-          </Badge>
+          <div className="flex items-center gap-2">
+            <Badge variant="outline" className="text-sm">
+              تقرير فني شامل
+            </Badge>
+            {isAuthenticated ? (
+              <>
+                <Link href="/interact">
+                  <Button variant="ghost" size="sm">التفاعل</Button>
+                </Link>
+                <Link href="/dashboard">
+                  <Button variant="ghost" size="sm">لوحة التحكم</Button>
+                </Link>
+                <Button variant="ghost" size="sm" onClick={() => logout()}>
+                  تسجيل الخروج
+                </Button>
+              </>
+            ) : (
+              <Button variant="ghost" size="sm" onClick={() => window.location.href = getLoginUrl()}>
+                تسجيل الدخول
+              </Button>
+            )}
+          </div>
         </div>
       </header>
 
